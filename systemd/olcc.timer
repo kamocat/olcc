@@ -1,0 +1,12 @@
+[Unit]
+Description="Monthly Oregon liquor price fetch"
+
+[Timer]
+#12PM PST on the first of every month
+OnCalendar=*-*-01 12:00:00
+#Execute immediatly if we missed the event due to the machine being off
+Persistent=true
+Unit=olcc.service
+
+[Install]
+WantedBy=timers.target

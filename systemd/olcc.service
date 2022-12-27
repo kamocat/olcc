@@ -1,0 +1,10 @@
+[Unit]
+Description="Monthly Oregon liquor price fetch"
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart =%h/olcc/fetch_liquor.py
+
+[Install]
+WantedBy=default.target
