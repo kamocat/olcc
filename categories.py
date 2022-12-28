@@ -1,7 +1,17 @@
 import re
+import requests
+from pdfminer.high_level import extract_text
 url = 'https://www.olcc.state.or.us/pdfs/category_price_list.pdf'
-#TODO: Use requests to get the pdf and pdfminer to extract the text
-#      without saving either file
+
+def fetch(fname):
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(fname, 'wb') as file:
+            file.write(response.content)
+        print(f'Successfully downloaded {fname}')
+    else:
+        raise ConnectionError(f'HTTP code {response.status_code}')
+
 
 # The categories are in alphebetical order
 cat = ['BRANDY / COGNAC', 'CACHACA', 'CANADIAN', 'COCKTAILS', 'CORDIALS',
@@ -14,19 +24,22 @@ def extract(fname):
     ci = 0 # category index
     bcat = {}
 
-    with open(fname, 'r') as file:
-        lines = file.readlines()
-        for line in lines:
-            if cat[ci + 1] in line:
-                ci += 1
-            # All the item codes are 11 digits, starting with 999
-            elif re.match('999[0-9]{8}', line):
-                bcat[int(line)] = ci
+    text = extract_text(fname)
+    lines = text.split('\n')
+    print(f'Converted {fname} to {len(lines)} lines of text')
+
+    for line in lines:
+        if cat[ci + 1] in line:
+            ci += 1
+        # All the item codes are 11 digits, starting with 999
+        elif re.match('999[0-9]{8}', line):
+            bcat[int(line)] = ci
     return bcat
 
 
 if __name__ == '__main__':
-    bottles = extract('categories.txt')
-    print(len(bottles))
-    print(bottles[99900511575])
+    bottles = extract('categories.pdf')
+    print(f'Found {len(bottles)} bottles')
+    x = 99900511575
+    print(f'Bottle {x} is {cat[bottles[x]]}')
         

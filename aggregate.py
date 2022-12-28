@@ -29,16 +29,19 @@ for f in filenames:
 
 
         con.commit()
+print('Prices saved')
 
 import categories as cat
 cur.execute('CREATE TABLE IF NOT EXISTS categories(id INTEGER PRIMARY KEY, name NOT NULL)')
 for i, val in enumerate(cat.cat):
     cur.execute('INSERT OR IGNORE INTO categories VALUES (?,?)', [i,val])
 con.commit()
-bottles = cat.extract('categories.txt')
+cat.fetch('tmp.pdf')
+bottles = cat.extract('tmp.pdf')
 for x in bottles:
     cur.execute('UPDATE bottles SET category = ? WHERE item = ?', [bottles[x], x])
 con.commit()
+print('Categories saved')
 
 
 con.close()
