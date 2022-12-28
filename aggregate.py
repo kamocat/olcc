@@ -8,7 +8,7 @@ cur = con.cursor()
 cur.execute('DROP TABLE IF EXISTS bottles');
 cur.execute('DROP TABLE IF EXISTS prices');
 
-cur.execute('CREATE TABLE bottles(item INTEGER PRIMARY KEY,status,description NOT NULL,size,age,proof REAL,case_size INTEGER, category INTEGER)')
+cur.execute('CREATE TABLE bottles(item INTEGER PRIMARY KEY,description NOT NULL,size,age,proof REAL, category INTEGER)')
 cur.execute('CREATE TABLE prices(item INTEGER, price REAL, date)')
 
 mydir = os.path.dirname(os.path.realpath(__file__))
@@ -23,7 +23,8 @@ for f in filenames:
         date = next(csvreader)
         header = next(csvreader)
         for row in csvreader:
-            cur.execute('INSERT INTO bottles VALUES (?,?,?,?,?,?,?)', row[1:8])
+            cur.execute('''INSERT INTO bottles (item, description, size, age, proof) 
+                        VALUES (?,?,?,?,?)''', [row[i] for i in [1,3,4,5,6]])
             cur.execute('INSERT INTO prices VALUES (?,?,?)', [row[1],row[8],row[9]])
 
 
