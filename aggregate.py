@@ -8,7 +8,7 @@ cur = con.cursor()
 cur.execute('DROP TABLE IF EXISTS bottles');
 cur.execute('DROP TABLE IF EXISTS prices');
 
-cur.execute('CREATE TABLE bottles(item INTEGER PRIMARY KEY,description NOT NULL,size,age,proof REAL, category INTEGER)')
+cur.execute('CREATE TABLE bottles(item INTEGER PRIMARY KEY,description NOT NULL,size,age,proof REAL, category INTEGER DEFAULT 0)')
 cur.execute('CREATE TABLE prices(item INTEGER, price REAL, date)')
 
 mydir = os.path.dirname(os.path.realpath(__file__))
@@ -32,6 +32,7 @@ for f in filenames:
 print('Prices saved')
 
 import categories as cat
+cur.execute('DROP TABLE IF EXISTS categories')
 cur.execute('CREATE TABLE IF NOT EXISTS categories(id INTEGER PRIMARY KEY, name NOT NULL)')
 for i, val in enumerate(cat.cat):
     cur.execute('INSERT OR IGNORE INTO categories VALUES (?,?)', [i,val])

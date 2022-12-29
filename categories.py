@@ -14,7 +14,8 @@ def fetch(fname):
 
 
 # The categories are in alphebetical order
-cat = ['BRANDY / COGNAC', 'CACHACA', 'CANADIAN', 'COCKTAILS', 'CORDIALS',
+cat = ['UNCATEGORIZED', 
+       'BRANDY / COGNAC', 'CACHACA', 'CANADIAN', 'COCKTAILS', 'CORDIALS',
        'DOMESTIC WHISKEY', 'GIN', 'IRISH', 'MEZCAL', 'NEUTRAL GRAIN SPIRIT',
        'OTHER IMPORTED WHISKY', 'RUM', 'SCOTCH', 'TEQUILA', 'VODKA', 
        'UNKNOWN']
@@ -29,11 +30,11 @@ def extract(fname):
     print(f'Converted {fname} to {len(lines)} lines of text')
 
     for line in lines:
-        if cat[ci + 1] in line:
-            ci += 1
         # All the item codes are 11 digits, starting with 999
-        elif re.match('999[0-9]{8}', line):
+        if re.match('999[0-9]{8}', line):
             bcat[int(line)] = ci
+        elif cat[ci + 1] in line:
+            ci += 1
     return bcat
 
 
